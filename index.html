@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediFlow Pro — Smart Clinic Management System</title>
+  <meta name="description" content="MediFlow Pro is a smart clinic management dashboard for tracking patients, appointments, and clinical statistics in real time." />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <aside id="sidebar" class="sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">medical_services</span>
+      </div>
+      <div>
+        <h1 class="logo-title">MediFlow Pro</h1>
+        <p class="logo-sub">Health Systems</p>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <div class="sidebar-cta">
+      <button class="btn-new-appt" id="openBookApptModal">
+        <span class="material-symbols-outlined">add</span>
+        New Appointment
+      </button>
+    </div>
+
+    <!-- Main Nav -->
+    <nav class="sidebar-nav" id="sidebarNav">
+      <ul>
+        <li>
+          <a href="#" class="nav-link active" data-page="dashboard" id="nav-dashboard">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-page="patients" id="nav-patients">
+            <span class="material-symbols-outlined">group</span>
+            Patients
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" data-page="appointments" id="nav-appointments">
+            <span class="material-symbols-outlined">calendar_today</span>
+            Appointments
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Footer Nav -->
+    <div class="sidebar-footer">
+      <ul>
+        <li><a href="#" class="nav-link"><span class="material-symbols-outlined">help</span>Support</a></li>
+        <li><a href="#" class="nav-link nav-link-danger"><span class="material-symbols-outlined">logout</span>Logout</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="main-wrapper">
+
+    <header class="topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Sidebar">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+
+      <!-- Page Title -->
+      <div class="topbar-title" id="pageTitle">
+        <h2>Dashboard</h2>
+      </div>
+
+      <!-- Search -->
+      <div class="topbar-search">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input type="text" id="globalSearch" placeholder="Search patients, appointments..." />
+      </div>
+
+      <!-- Actions -->
+      <div class="topbar-actions">
+        <button class="icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="notif-badge">3</span>
+        </button>
+        <button class="icon-btn" title="History" aria-label="History">
+          <span class="material-symbols-outlined">history</span>
+        </button>
+        <div class="topbar-divider"></div>
+        <button class="btn-checkin">Check-in</button>
+        <div class="avatar-wrap" title="Dr. Smith">
+          <span class="avatar-initials">DS</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <section id="page-dashboard" class="page active">
+        <!-- Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card" id="stat-total">
+            <div class="stat-header">
+              <span class="stat-label">Total Patients</span>
+              <div class="stat-icon icon-primary">
+                <span class="material-symbols-outlined">group</span>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <span class="stat-value" id="statTotalPatients">0</span>
+              <span class="stat-badge badge-green">
+                <span class="material-symbols-outlined">trending_up</span>
+                12%
+              </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Today's Appointments</span>
+              <div class="stat-icon icon-blue">
+                <span class="material-symbols-outlined">calendar_today</span>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <span class="stat-value" id="statTodayAppts">0</span>
+              <span class="stat-badge badge-blue">
+                <span class="material-symbols-outlined">trending_flat</span>
+                0%
+              </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Completed</span>
+              <div class="stat-icon icon-green">
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <span class="stat-value" id="statCompleted">0</span>
+              <span class="stat-badge badge-green">
+                <span class="material-symbols-outlined">trending_up</span>
+                5%
+              </span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Cancelled</span>
+              <div class="stat-icon icon-red">
+                <span class="material-symbols-outlined">cancel</span>
+              </div>
+            </div>
+            <div class="stat-footer">
+              <span class="stat-value" id="statCancelled">0</span>
+              <span class="stat-badge badge-red">
+                <span class="material-symbols-outlined">trending_down</span>
+                -2%
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-mid">
+          <div class="card card-lg">
+            <div class="card-head">
+              <h3>Today's Appointments</h3>
+              <button class="link-btn" data-page="appointments" id="viewAllAppts">View All</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table" id="dashApptTable">
+                <thead>
+                  <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashApptBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card card-sm donut-card">
+            <h3>Status Distribution</h3>
+            <div class="donut-wrap">
+              <canvas id="donutChart" width="160" height="160"></canvas>
+              <div class="donut-center">
+                <span class="donut-total" id="donutTotal">0</span>
+                <span class="donut-label">Total Appts</span>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="dot dot-blue"></span>Scheduled</div>
+              <div class="legend-item"><span class="dot dot-green"></span>Completed</div>
+              <div class="legend-item"><span class="dot dot-red"></span>Cancelled</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-bot">
+          <div class="card">
+            <h3>Weekly Appointments</h3>
+            <div class="bar-chart-wrap">
+              <div class="bar-chart" id="barChart">
+              </div>
+              <div class="bar-labels" id="barLabels">
+                <span>Mon</span><span>Tue</span><span>Wed</span>
+                <span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3>Recent Patients</h3>
+              <button class="link-btn" data-page="patients" id="viewAllPatients">View Directory</button>
+            </div>
+            <div class="recent-patients" id="recentPatientsList">
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="page-patients" class="page">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Patients Directory</h2>
+            <p class="page-sub">Manage and view comprehensive patient records across the health system.</p>
+          </div>
+          <button class="btn-primary" id="openAddPatientModal">
+            <span class="material-symbols-outlined">person_add</span>
+            Add Patient
+          </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card table-card">
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="search-box">
+              <span class="material-symbols-outlined">search</span>
+              <input type="text" id="patientSearch" placeholder="Search by name or phone..." />
+            </div>
+            <div class="toolbar-controls">
+              <select id="patientStatusFilter" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <select id="patientSort" class="filter-select">
+                <option value="name-asc">Name A→Z</option>
+                <option value="name-desc">Name Z→A</option>
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="data-table" id="patientsTable">
+              <thead>
+                <tr>
+                  <th data-sort="id" class="sortable">ID <span class="sort-icon material-symbols-outlined">unfold_more</span></th>
+                  <th data-sort="name" class="sortable">Name <span class="sort-icon material-symbols-outlined">unfold_more</span></th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Contact</th>
+                  <th data-sort="date" class="sortable">Last Visit <span class="sort-icon material-symbols-outlined">unfold_more</span></th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="patientsBody">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-bar" id="patientPagination">
+            <span class="pagination-info" id="patientPaginationInfo"></span>
+            <div class="pagination-btns" id="patientPaginationBtns"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-appointments" class="page">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Appointments Directory</h2>
+            <p class="page-sub">Manage and schedule patient visits efficiently.</p>
+          </div>
+          <button class="btn-primary" id="openBookApptModal2">
+            <span class="material-symbols-outlined">event_available</span>
+            Book Appointment
+          </button>
+        </div>
+
+        <!-- Filters Toolbar -->
+        <div class="card filter-toolbar">
+          <div class="search-box flex-grow-1">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" id="apptSearch" placeholder="Search patient or ID..." />
+          </div>
+          <input type="date" id="apptDateFilter" class="filter-input" />
+          <select id="apptStatusFilter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <button class="btn-icon-outline" id="clearApptFilters" title="Clear filters">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card table-card">
+          <div class="table-wrap">
+            <table class="data-table" id="apptsTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="apptsBody">
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-bar" id="apptPagination">
+            <span class="pagination-info" id="apptPaginationInfo"></span>
+            <div class="pagination-btns" id="apptPaginationBtns"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="patientModalOverlay">
+    <div class="modal-dialog modal-lg-custom">
+      <div class="modal-header-custom">
+        <div>
+          <h4 id="patientModalTitle">Add New Patient</h4>
+          <p id="patientModalSub">Enter comprehensive patient details to create a new medical record.</p>
+        </div>
+        <button class="modal-close" id="closePatientModal" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body-custom">
+        <form id="patientForm" novalidate>
+          <input type="hidden" id="patientId" />
+
+          <!-- Personal Info -->
+          <div class="form-section">
+            <h5 class="form-section-title">Personal Information</h5>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label for="pFirstName">First Name <span class="required">*</span></label>
+                <input type="text" id="pFirstName" class="form-input" placeholder="e.g. Jane" required />
+                <span class="form-error" id="errFirstName"></span>
+              </div>
+              <div class="form-group">
+                <label for="pLastName">Last Name <span class="required">*</span></label>
+                <input type="text" id="pLastName" class="form-input" placeholder="e.g. Doe" required />
+                <span class="form-error" id="errLastName"></span>
+              </div>
+              <div class="form-group">
+                <label for="pDOB">Date of Birth <span class="required">*</span></label>
+                <input type="date" id="pDOB" class="form-input" required />
+                <span class="form-error" id="errDOB"></span>
+              </div>
+              <div class="form-group">
+                <label for="pGender">Gender <span class="required">*</span></label>
+                <select id="pGender" class="form-input" required>
+                  <option value="" disabled selected>Select gender...</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="form-error" id="errGender"></span>
+              </div>
+              <div class="form-group">
+                <label for="pStatus">Status <span class="required">*</span></label>
+                <select id="pStatus" class="form-input" required>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Details -->
+          <div class="form-section">
+            <h5 class="form-section-title">Contact Details</h5>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="pPhone">Phone Number <span class="required">*</span></label>
+                <input type="tel" id="pPhone" class="form-input" placeholder="(555) 000-0000" required />
+                <span class="form-error" id="errPhone"></span>
+              </div>
+              <div class="form-group">
+                <label for="pEmail">Email Address</label>
+                <input type="email" id="pEmail" class="form-input" placeholder="name@domain.com" />
+                <span class="form-error" id="errEmail"></span>
+              </div>
+              <div class="form-group form-col-2">
+                <label for="pAddress">Address</label>
+                <input type="text" id="pAddress" class="form-input" placeholder="Street address, city, etc." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Medical Notes -->
+          <div class="form-section">
+            <h5 class="form-section-title">Initial Medical Notes</h5>
+            <div class="form-group">
+              <label for="pNotes">Allergies, chronic conditions, or general observations</label>
+              <textarea id="pNotes" class="form-input form-textarea" placeholder="Enter any initial notes here..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer-custom">
+        <button class="btn-secondary" id="cancelPatientModal">Cancel</button>
+        <button class="btn-primary" id="savePatientBtn">
+          <span class="material-symbols-outlined">save</span>
+          Save Patient
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Appointment Modal -->
+  <div class="modal-overlay" id="apptModalOverlay">
+    <div class="modal-dialog modal-md-custom">
+      <div class="modal-header-custom">
+        <div>
+          <h4 id="apptModalTitle">Book Appointment</h4>
+          <p>Schedule a new patient appointment.</p>
+        </div>
+        <button class="modal-close" id="closeApptModal" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body-custom">
+        <form id="apptForm" novalidate>
+          <input type="hidden" id="apptId" />
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="aPatient">Patient <span class="required">*</span></label>
+              <select id="aPatient" class="form-input" required>
+                <option value="" disabled selected>Select patient...</option>
+              </select>
+              <span class="form-error" id="errAPatient"></span>
+            </div>
+            <div class="form-group">
+              <label for="aDoctor">Doctor <span class="required">*</span></label>
+              <select id="aDoctor" class="form-input" required>
+                <option value="" disabled selected>Select doctor...</option>
+                <option value="Dr. Smith">Dr. Smith</option>
+                <option value="Dr. Adams">Dr. Adams</option>
+                <option value="Dr. Lee">Dr. Lee</option>
+                <option value="Dr. Johnson">Dr. Johnson</option>
+                <option value="Dr. Chen">Dr. Chen</option>
+              </select>
+              <span class="form-error" id="errADoctor"></span>
+            </div>
+            <div class="form-group">
+              <label for="aDate">Date <span class="required">*</span></label>
+              <input type="date" id="aDate" class="form-input" required />
+              <span class="form-error" id="errADate"></span>
+            </div>
+            <div class="form-group">
+              <label for="aTime">Time <span class="required">*</span></label>
+              <input type="time" id="aTime" class="form-input" required />
+              <span class="form-error" id="errATime"></span>
+            </div>
+            <div class="form-group">
+              <label for="aType">Appointment Type <span class="required">*</span></label>
+              <select id="aType" class="form-input" required>
+                <option value="" disabled selected>Select type...</option>
+                <option value="Consultation">Consultation</option>
+                <option value="Follow-up">Follow-up</option>
+                <option value="Routine Check">Routine Check</option>
+                <option value="Lab Results Review">Lab Results Review</option>
+                <option value="Emergency">Emergency</option>
+                <option value="General Checkup">General Checkup</option>
+              </select>
+              <span class="form-error" id="errAType"></span>
+            </div>
+            <div class="form-group">
+              <label for="aStatus">Status</label>
+              <select id="aStatus" class="form-input">
+                <option value="Scheduled">Scheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="aNotes">Notes</label>
+            <textarea id="aNotes" class="form-input form-textarea-sm" placeholder="Additional notes..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer-custom">
+        <button class="btn-secondary" id="cancelApptModal">Cancel</button>
+        <button class="btn-primary" id="saveApptBtn">
+          <span class="material-symbols-outlined">event_available</span>
+          Save Appointment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="patientDetailOverlay">
+    <div class="modal-dialog modal-lg-custom">
+      <div class="modal-header-custom">
+        <div class="patient-detail-header" id="patientDetailHeader">
+        </div>
+        <button class="modal-close" id="closePatientDetail" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body-custom" id="patientDetailBody">
+      </div>
+      <div class="modal-footer-custom">
+        <button class="btn-secondary" id="closePatientDetailFooter">Close</button>
+        <button class="btn-primary" id="editFromDetail">
+          <span class="material-symbols-outlined">edit</span>
+          Edit Patient
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" id="confirmDeleteOverlay">
+    <div class="modal-dialog modal-sm-custom">
+      <div class="modal-header-custom danger-header">
+        <div class="danger-icon-wrap">
+          <span class="material-symbols-outlined">delete_forever</span>
+        </div>
+        <button class="modal-close" id="closeConfirmDelete" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body-custom text-center">
+        <h4 class="confirm-title">Delete Record?</h4>
+        <p class="confirm-sub" id="confirmDeleteMsg">Are you sure you want to delete this record? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer-custom justify-center">
+        <button class="btn-secondary" id="cancelDelete">Cancel</button>
+        <button class="btn-danger" id="confirmDeleteBtn">
+          <span class="material-symbols-outlined">delete</span>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
